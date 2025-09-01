@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { type GeneralSettingsConfig, generalSettingsStore, DEFAULT_GENERAL_SETTINGS } from '@extension/storage';
 import { t } from '@extension/i18n';
+import { useTheme } from '@extension/shared';
 
 interface GeneralSettingsProps {
-  isDarkMode?: boolean;
+  isDarkMode?: boolean; // Keep for backward compatibility, but will use useTheme internally
 }
 
-export const GeneralSettings = ({ isDarkMode = false }: GeneralSettingsProps) => {
+export const GeneralSettings = ({ isDarkMode: legacyIsDarkMode }: GeneralSettingsProps) => {
+  const { isDarkMode } = useTheme(); // Use the centralized theme system
   const [settings, setSettings] = useState<GeneralSettingsConfig>(DEFAULT_GENERAL_SETTINGS);
 
   useEffect(() => {
@@ -29,18 +31,13 @@ export const GeneralSettings = ({ isDarkMode = false }: GeneralSettingsProps) =>
 
   return (
     <section className="space-y-6">
-      <div
-        className={`rounded-lg border ${isDarkMode ? 'border-slate-700 bg-slate-800' : 'border-blue-100 bg-white'} p-6 text-left shadow-sm`}>
-        <h2 className={`mb-4 text-left text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-          {t('options_general_header')}
-        </h2>
+      <div className="rounded-lg border border-theme-border-primary bg-theme-bg-elevated p-6 text-left shadow-sm">
+        <h2 className="mb-4 text-left text-xl font-semibold text-theme-text-primary">{t('options_general_header')}</h2>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                {t('options_general_maxSteps')}
-              </h3>
+              <h3 className="text-base font-medium text-theme-text-secondary">{t('options_general_maxSteps')}</h3>
               <p className={`text-sm font-normal ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                 {t('options_general_maxSteps_desc')}
               </p>
